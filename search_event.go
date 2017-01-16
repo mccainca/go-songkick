@@ -1,6 +1,13 @@
 package songkick
 
-import "net/url"
+import (
+	"fmt"
+	"net/url"
+	"time"
+)
+
+var artist string
+var dateRange string
 
 //Events ...
 type Events struct {
@@ -80,9 +87,12 @@ type Events struct {
 	} `json:"resultsPage"`
 }
 
-//GetEventsByArtist ...
-func GetEventsByArtist(artistName string, pageNumber int) *Events {
-	requestURL := APIUrl + "events.json?artist_name=" + url.QueryEscape(artistName) + "&page=" + convertPage(pageNumber) + "&apikey=" + APIKey
+//GetEventsByArtist ... Get events by artist name
+func GetEventsByArtist(artistName string, minDate time.Time, maxDate time.Time, pageNumber int) *Events {
+	if !maxDate.IsZero() && !minDate.IsZero() {
+		dateRange = fmt.Sprintf("&min_date=%s&max_date=%s", minDate.Format("2006-01-02"), maxDate.Format("2006-01-02"))
+	}
+	requestURL := APIUrl + "events.json?artist_name=" + url.QueryEscape(artistName) + dateRange + "&page=" + convertPage(pageNumber) + "&apikey=" + APIKey
 	var e *Events
 	err := get(requestURL, &e)
 	if err != nil {
@@ -91,9 +101,70 @@ func GetEventsByArtist(artistName string, pageNumber int) *Events {
 	return e
 }
 
-//GetEventsByLocation ...
-func GetEventsByLocation(location string, pageNumber int) *Events {
-	requestURL := APIUrl + "events.json?location=" + url.QueryEscape(location) + "&page=" + convertPage(pageNumber) + "&apikey=" + APIKey
+//GetEventsBySKLocation ... lookup location by SK Id
+func GetEventsBySKLocation(location int, artistName string, minDate time.Time, maxDate time.Time, pageNumber int) *Events {
+	loc := fmt.Sprintf("sk:%d", location)
+	if artistName != "" {
+		artist = fmt.Sprintf("&artist_name=%s", url.QueryEscape(artistName))
+	}
+	if !maxDate.IsZero() && !minDate.IsZero() {
+		dateRange = fmt.Sprintf("&min_date=%s&max_date=%s", minDate.Format("2006-01-02"), maxDate.Format("2006-01-02"))
+	}
+	requestURL := APIUrl + "events.json?location=" + url.QueryEscape(loc) + "&page=" + convertPage(pageNumber) + artist + dateRange + "&apikey=" + APIKey
+	var e *Events
+	err := get(requestURL, &e)
+	if err != nil {
+		return nil
+	}
+	return e
+}
+
+//GetEventsByGeoLocation ... lookup location by latitude and longitude
+func GetEventsByGeoLocation(latitude float32, longitude float32, artistName string, minDate time.Time, maxDate time.Time, pageNumber int) *Events {
+	loc := fmt.Sprintf("geo:%f,%f", latitude, longitude)
+	if artistName != "" {
+		artist = fmt.Sprintf("&artist_name=%s", url.QueryEscape(artistName))
+	}
+	if !maxDate.IsZero() && !minDate.IsZero() {
+		dateRange = fmt.Sprintf("&min_date=%s&max_date=%s", minDate.Format("2006-01-02"), maxDate.Format("2006-01-02"))
+	}
+	requestURL := APIUrl + "events.json?location=" + url.QueryEscape(loc) + "&page=" + convertPage(pageNumber) + artist + dateRange + "&apikey=" + APIKey
+	var e *Events
+	err := get(requestURL, &e)
+	if err != nil {
+		return nil
+	}
+	return e
+}
+
+//GetEventsByIPLocation ... lookup location by IP Address
+func GetEventsByIPLocation(location string, artistName string, minDate time.Time, maxDate time.Time, pageNumber int) *Events {
+	loc := fmt.Sprintf("ip:%s", location)
+	if artistName != "" {
+		artist = fmt.Sprintf("&artist_name=%s", url.QueryEscape(artistName))
+	}
+	if !maxDate.IsZero() && !minDate.IsZero() {
+		dateRange = fmt.Sprintf("&min_date=%s&max_date=%s", minDate.Format("2006-01-02"), maxDate.Format("2006-01-02"))
+	}
+	requestURL := APIUrl + "events.json?location=" + url.QueryEscape(loc) + "&page=" + convertPage(pageNumber) + artist + dateRange + "&apikey=" + APIKey
+	var e *Events
+	err := get(requestURL, &e)
+	if err != nil {
+		return nil
+	}
+	return e
+}
+
+//GetEventsByClientIPLocation ... lookup location by Client IP Address. Useful for purely client side implementations.
+func GetEventsByClientIPLocation(artistName string, minDate time.Time, maxDate time.Time, pageNumber int) *Events {
+	loc := "clientip"
+	if artistName != "" {
+		artist = fmt.Sprintf("&artist_name=%s", url.QueryEscape(artistName))
+	}
+	if !maxDate.IsZero() && !minDate.IsZero() {
+		dateRange = fmt.Sprintf("&min_date=%s&max_date=%s", minDate.Format("2006-01-02"), maxDate.Format("2006-01-02"))
+	}
+	requestURL := APIUrl + "events.json?location=" + url.QueryEscape(loc) + "&page=" + convertPage(pageNumber) + artist + dateRange + "&apikey=" + APIKey
 	var e *Events
 	err := get(requestURL, &e)
 	if err != nil {
