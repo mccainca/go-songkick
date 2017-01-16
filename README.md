@@ -18,7 +18,7 @@ This client implements the following features of the SongKick API
 	 - Events
 	 - Artists
 	 - Venue
-	 - Metro Are
+	 - Metro Area
 
 In addition, all query parameters such as sort, date range, and page order have been implemented.  
 
