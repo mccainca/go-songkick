@@ -2,13 +2,14 @@ package songkick
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 )
 
 func get(requestURL string, obj interface{}) error {
-
+	fmt.Println(requestURL)
 	rsp, err := http.Get(requestURL)
 	if err != nil {
 		return err
