@@ -4,6 +4,8 @@
 A golang client for the SongKick API
 ----------
 
+[![GoDoc](https://godoc.org/github.com/mccainca/go-songkick?status.svg)](http://godoc.org/github.com/mccainca/go-songkick)
+
 ------------------------------------
 This client implements the following features of the SongKick API
 
