@@ -36,6 +36,9 @@ Complete user calendar event query
 
 Write better docs
 
+Error handling
+
+
 Additional Information
 ----------------------
 If you have questions,  feel free to ask.  I'm always happy to help.
