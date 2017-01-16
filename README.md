@@ -31,7 +31,10 @@ Please read the godoc for more information.
 TODO
 ----
 Write unit tests
+
 Complete user calendar event query
+
+Write better docs
 
 Additional Information
 ----------------------
